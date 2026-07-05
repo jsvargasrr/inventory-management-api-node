@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  name         String
+  sku          String   @unique
+  category     String
+  price        Float
+  currentStock Int      @default(0)
+  minStock     Int
+  supplier     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  movements      StockMovement[]
+  alerts         Alert[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model StockMovement {
+  id        String       @id @default(uuid())
+  productId String
+  product   Product      @relation(fields: [productId], references: [id])
+  type      MovementType
+  quantity  Int
+  reason    String
+  createdAt DateTime     @default(now())
+}
+
+model Alert {
+  id         String      @id @default(uuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id])
+  type       AlertType   @default(STOCK_BAJO)
+  status     AlertStatus @default(ACTIVA)
+  resolvedAt DateTime?
+  createdAt  DateTime    @default(now())
+
+  purchaseOrders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id           String              @id @default(uuid())
+  productId    String
+  product      Product             @relation(fields: [productId], references: [id])
+  alertId      String?
+  alert        Alert?              @relation(fields: [alertId], references: [id])
+  supplier     String
+  quantity     Int
+  status       PurchaseOrderStatus @default(PENDIENTE)
+  rejectReason String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+enum MovementType {
+  ENTRADA
+  SALIDA
+}
+
+enum AlertType {
+  STOCK_BAJO
+}
+
+enum AlertStatus {
+  ACTIVA
+  RESUELTA
+}
+
+enum PurchaseOrderStatus {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
+  RECIBIDA
+}

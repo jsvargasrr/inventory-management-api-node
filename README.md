@@ -151,24 +151,60 @@ Estructura de tests:
 - `tests/unit/application/` — Casos de uso con repositorios mockeados
 - `tests/integration/api/` — Flujos completos contra SQLite de prueba
 
-## Deploy (PostgreSQL)
+## Documentación API (Swagger)
 
-Para producción, cambiar `DATABASE_URL` a PostgreSQL en `.env`:
+Con el servidor en marcha, abre:
 
-```env
-DATABASE_URL="postgresql://user:password@host:5432/inventory?schema=public"
+```
+http://localhost:3000/docs
 ```
 
-En `prisma/schema.prisma`, cambiar `provider` de `sqlite` a `postgresql` y ejecutar:
+OpenAPI JSON en `/docs/json`.
+
+## Docker (PostgreSQL)
 
 ```bash
-npm run db:migrate
-npm run db:seed
-npm run build
-npm start
+# Levantar API + PostgreSQL
+docker compose up --build
+
+# API: http://localhost:3000
+# Docs: http://localhost:3000/docs
+# Health: http://localhost:3000/health
 ```
 
-Plataformas recomendadas: [Railway](https://railway.app), [Render](https://render.com).
+El contenedor usa `prisma/schema.postgresql.prisma` automáticamente.
+
+## CI (GitHub Actions)
+
+Pipeline en `.github/workflows/ci.yml`:
+
+- `npm ci` → lint → build → test → verify:enunciado
+
+## Deploy en la nube
+
+### Render (recomendado)
+
+1. Conectar repo en [Render](https://render.com)
+2. Usar `render.yaml` (Blueprint) — crea Web Service + PostgreSQL
+3. La variable `DATABASE_URL` se inyecta automáticamente
+4. Start command: `./scripts/start-production.sh`
+
+### Railway
+
+1. Conectar repo en [Railway](https://railway.app)
+2. Añadir servicio PostgreSQL
+3. Configurar `DATABASE_URL` en variables de entorno
+4. Railway detecta `railway.toml` + `Dockerfile`
+
+### Manual (PostgreSQL)
+
+```bash
+# Con DATABASE_URL apuntando a PostgreSQL
+npm run build
+npm run start:prod
+```
+
+El script `start-production.sh` detecta PostgreSQL y usa el schema correcto.
 
 ## Datos de referencia (seed)
 

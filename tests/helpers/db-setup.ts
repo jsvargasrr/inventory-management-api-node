@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
+import path from 'node:path';
 
 export function resetAndMigrateDatabase(databaseUrl: string, projectRoot: string): void {
   const dbPath = databaseUrl.replace(/^file:/, '');

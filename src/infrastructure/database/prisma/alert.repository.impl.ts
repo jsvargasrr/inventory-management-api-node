@@ -1,4 +1,4 @@
-import type { PrismaClient, Alert as PrismaAlert } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import type {
   Alert,
   AlertFilters,
@@ -6,8 +6,9 @@ import type {
   CreateAlertData,
 } from '../../../domain/alert/alert.repository.js';
 import { getDbClient } from './prisma-context.js';
+import type { PrismaAlertRecord } from './prisma-types.js';
 
-function mapAlert(record: PrismaAlert): Alert {
+function mapAlert(record: PrismaAlertRecord): Alert {
   return {
     id: record.id,
     productId: record.productId,

@@ -1,13 +1,16 @@
-import { PrismaClient } from '@prisma/client';
-import { execSync } from 'node:child_process';
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildApp } from '../../src/infrastructure/http/app.js';
 import type { FastifyInstance } from 'fastify';
+import {
+  createTestPrismaClient,
+  getProjectRoot,
+  resetAndMigrateDatabase,
+} from './db-setup.js';
+import type { PrismaClient } from '@prisma/client';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, '../..');
+const projectRoot = getProjectRoot(__dirname);
 const testDbPath = path.join(projectRoot, 'test.db');
 
 let prisma: PrismaClient;
@@ -17,28 +20,11 @@ export async function setupTestApp() {
   const databaseUrl = `file:${testDbPath}`;
 
   process.env.DATABASE_URL = databaseUrl;
+  process.env.NODE_ENV = 'test';
 
-  for (const file of [testDbPath, `${testDbPath}-journal`]) {
-    if (fs.existsSync(file)) {
-      fs.unlinkSync(file);
-    }
-  }
+  resetAndMigrateDatabase(databaseUrl, projectRoot);
 
-  execSync('npx prisma db push --skip-generate', {
-    cwd: projectRoot,
-    env: { ...process.env, DATABASE_URL: databaseUrl },
-    stdio: 'pipe',
-  });
-
-  execSync('npx tsx prisma/seed.ts', {
-    cwd: projectRoot,
-    env: { ...process.env, DATABASE_URL: databaseUrl },
-    stdio: 'pipe',
-  });
-
-  prisma = new PrismaClient({
-    datasources: { db: { url: databaseUrl } },
-  });
+  prisma = createTestPrismaClient(databaseUrl);
 
   app = await buildApp({ prisma, logger: false });
   await app.ready();

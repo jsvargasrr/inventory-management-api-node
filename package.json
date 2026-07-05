@@ -13,10 +13,12 @@
     "verify:enunciado": "tsx scripts/verify-enunciado.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
-    "db:reset": "prisma migrate reset --force",
-    "lint": "eslint src tests --ext .ts",
+    "db:reset": "prisma migrate reset",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"prisma/**/*.ts\""
   },
   "prisma": {
@@ -34,17 +36,24 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^11.1.0",
     "@prisma/client": "^6.19.3",
     "dotenv": "^17.4.2",
     "fastify": "^5.9.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^26.1.0",
     "@vitest/coverage-v8": "^4.1.9",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.4",
     "prisma": "^6.19.3",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1",
     "vitest": "^4.1.9"
   }
 }

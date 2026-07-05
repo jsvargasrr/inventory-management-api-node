@@ -5,10 +5,7 @@ import type {
   StockMovement,
 } from '../../../domain/inventory/inventory.repository.js';
 import { getDbClient } from './prisma-context.js';
-
-type PrismaMovementRecord = NonNullable<
-  Awaited<ReturnType<PrismaClient['stockMovement']['findFirst']>>
->;
+import type { PrismaMovementRecord } from './prisma-types.js';
 
 function mapMovement(record: PrismaMovementRecord): StockMovement {
   return {

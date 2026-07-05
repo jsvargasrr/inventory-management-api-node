@@ -55,9 +55,9 @@ npm install
 # 2. Configurar variables de entorno
 cp .env.example .env
 
-# 3. Generar cliente Prisma y crear base de datos
+# 3. Generar cliente Prisma, aplicar migraciones y seed
 npm run db:generate
-npm run db:push
+npm run db:deploy
 npm run db:seed
 
 # 4. Iniciar servidor en modo desarrollo
@@ -75,8 +75,12 @@ La API estará disponible en `http://localhost:3000`.
 | `npm start` | Ejecutar build de producción |
 | `npm test` | Ejecutar todos los tests |
 | `npm run test:coverage` | Tests con reporte de cobertura |
+| `npm run db:deploy` | Aplicar migraciones (producción/CI) |
+| `npm run db:migrate` | Crear/aplicar migraciones en desarrollo |
 | `npm run db:seed` | Cargar datos de referencia |
 | `npm run db:reset` | Resetear DB y re-seed |
+| `npm run lint` | Verificar código con ESLint |
+| `npm run format` | Formatear con Prettier |
 
 ## Endpoints
 
@@ -123,6 +127,13 @@ La API estará disponible en `http://localhost:3000`.
 4. **Una alerta activa por producto** — No se crea duplicada si ya existe una ACTIVA.
 5. **Transiciones de estado** — Solo PENDIENTE puede aprobarse/rechazarse; solo APROBADA puede recibirse.
 6. **Historial inmutable** — Los movimientos de inventario solo se crean, nunca se modifican ni eliminan.
+
+## Seguridad
+
+- **@fastify/helmet** — Headers HTTP de seguridad
+- **@fastify/rate-limit** — Límite de 100 req/min en producción
+- **bodyLimit** — Tamaño máximo de body: 1 MB
+- **Errores 500** — Sin stack trace en producción
 
 ## Tests
 

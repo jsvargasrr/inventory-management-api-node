@@ -35,17 +35,10 @@ async function setupApp(): Promise<{ app: FastifyInstance; prisma: PrismaClient 
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
 
-  const { execSync } = await import('node:child_process');
-  execSync('npx prisma db push --skip-generate', {
-    cwd: projectRoot,
-    env: { ...process.env, DATABASE_URL: databaseUrl },
-    stdio: 'pipe',
-  });
-  execSync('npx tsx prisma/seed.ts', {
-    cwd: projectRoot,
-    env: { ...process.env, DATABASE_URL: databaseUrl },
-    stdio: 'pipe',
-  });
+  const { resetAndMigrateDatabase } = await import('../tests/helpers/db-setup.js');
+
+  process.env.DATABASE_URL = databaseUrl;
+  resetAndMigrateDatabase(databaseUrl, projectRoot);
 
   const prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
   const app = await buildApp({ prisma, logger: false });

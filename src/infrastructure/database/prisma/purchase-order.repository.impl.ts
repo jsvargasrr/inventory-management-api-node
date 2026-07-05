@@ -1,4 +1,4 @@
-import type { PrismaClient, PurchaseOrder as PrismaOrder } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import type {
   CreatePurchaseOrderData,
   PurchaseOrder,
@@ -7,8 +7,9 @@ import type {
   PurchaseOrderStatus,
 } from '../../../domain/purchase-order/order-state.machine.js';
 import { getDbClient } from './prisma-context.js';
+import type { PrismaOrderRecord } from './prisma-types.js';
 
-function mapOrder(record: PrismaOrder): PurchaseOrder {
+function mapOrder(record: PrismaOrderRecord): PurchaseOrder {
   return {
     id: record.id,
     productId: record.productId,

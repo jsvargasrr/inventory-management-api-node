@@ -72,9 +72,15 @@ export function errorHandler(
     return;
   }
 
-  console.error('Unhandled error:', error);
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('Unhandled error:', error);
+  }
+
   reply.status(500).send({
     error: 'Error interno del servidor',
     code: 'INTERNAL_SERVER_ERROR',
+    ...(process.env.NODE_ENV !== 'production' && {
+      details: error instanceof Error ? error.message : String(error),
+    }),
   });
 }

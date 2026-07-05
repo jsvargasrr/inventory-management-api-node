@@ -1,4 +1,4 @@
-import type { PrismaClient, Product as PrismaProduct } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import type {
   CreateProductData,
   Product,
@@ -6,8 +6,9 @@ import type {
   ProductRepository,
 } from '../../../domain/product/product.repository.js';
 import { getDbClient } from './prisma-context.js';
+import type { PrismaProductRecord } from './prisma-types.js';
 
-function mapProduct(record: PrismaProduct): Product {
+function mapProduct(record: PrismaProductRecord): Product {
   return {
     id: record.id,
     name: record.name,

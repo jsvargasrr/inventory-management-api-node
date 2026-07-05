@@ -144,4 +144,32 @@ describe('AdjustStockUseCase', () => {
 
     expect(mocks.alertRepository.resolve).toHaveBeenCalledWith('alert-1');
   });
+
+  it('no crea alerta duplicada si ya existe una activa', async () => {
+    mocks = createMocks(35);
+    vi.mocked(mocks.alertRepository.findActiveByProductId).mockResolvedValue({
+      id: 'alert-1',
+      productId: 'prod-1',
+      type: 'STOCK_BAJO',
+      status: 'ACTIVA',
+      resolvedAt: null,
+      createdAt: new Date(),
+    });
+
+    useCase = new AdjustStockUseCase(
+      mocks.productRepository,
+      mocks.inventoryRepository,
+      mocks.alertRepository,
+      mocks.unitOfWork,
+    );
+
+    await useCase.execute({
+      productId: 'prod-1',
+      type: 'SALIDA',
+      quantity: 5,
+      reason: 'Venta',
+    });
+
+    expect(mocks.alertRepository.create).not.toHaveBeenCalled();
+  });
 });

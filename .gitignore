@@ -4,5 +4,6 @@ dist/
 *.db
 *.db-journal
 test.db
+verify-checklist.db
 coverage/
 .DS_Store

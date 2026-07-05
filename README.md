@@ -127,8 +127,12 @@ La API estará disponible en `http://localhost:3000`.
 ## Tests
 
 ```bash
-npm test
+npm test                  # 52 tests
+npm run test:coverage     # Reporte de cobertura
+npm run verify:enunciado  # Checklist RF + reglas de negocio (27 checks)
 ```
+
+**Cobertura actual:** ~86% statements · ~92% functions · ~70% branches
 
 Estructura de tests:
 

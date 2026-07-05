@@ -10,6 +10,7 @@ import {
   registerPurchaseOrderRoutes,
 } from './routes/index.js';
 import { registerRouteDocs } from './routes/docs-schemas.js';
+import { registerRootRoute } from './routes/root.route.js';
 import { registerSwagger } from './swagger.js';
 
 export interface BuildAppOptions {
@@ -44,6 +45,8 @@ export async function buildApp(options: BuildAppOptions = {}) {
   const container: AppContainer = buildContainer(options.prisma);
 
   app.setErrorHandler(errorHandler);
+
+  registerRootRoute(app);
 
   if (enableDocs) {
     registerRouteDocs(app);

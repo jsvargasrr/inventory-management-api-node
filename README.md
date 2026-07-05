@@ -138,6 +138,7 @@ npm run dev
 
 | Recurso | URL |
 |---------|-----|
+| API Info | http://localhost:3000/ |
 | API | http://localhost:3000 |
 | Swagger | http://localhost:3000/docs |
 | Health | http://localhost:3000/health |
@@ -346,9 +347,12 @@ Importar en Postman o Insomnia:
 
 ```
 docs/postman/inventory-api.postman_collection.json
+docs/postman/local.postman_environment.json   ← entorno local
 ```
 
-Variable `baseUrl`: `http://localhost:3000`. Incluye flujo completo con variables automáticas `productId`, `alertId`, `orderId`.
+1. Import → colección + environment
+2. Seleccionar environment **MercadoExpress — Local**
+3. `npm run dev` y ejecutar requests
 
 ---
 

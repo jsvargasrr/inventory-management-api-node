@@ -26,6 +26,7 @@ describe('RejectPurchaseOrderUseCase', () => {
       }),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new RejectPurchaseOrderUseCase(repo);
@@ -47,6 +48,7 @@ describe('RejectPurchaseOrderUseCase', () => {
       updateStatus: vi.fn(),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new RejectPurchaseOrderUseCase(repo);
@@ -62,6 +64,7 @@ describe('RejectPurchaseOrderUseCase', () => {
       updateStatus: vi.fn(),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new RejectPurchaseOrderUseCase(repo);

@@ -39,6 +39,7 @@ describe('ReceivePurchaseOrderUseCase', () => {
       updateStatus: vi.fn().mockResolvedValue({ ...approvedOrder, status: 'RECIBIDA' }),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const productRepository: ProductRepository = {
@@ -47,6 +48,7 @@ describe('ReceivePurchaseOrderUseCase', () => {
       create: vi.fn(),
       findBySku: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
       existsBySku: vi.fn(),
     };
 
@@ -75,6 +77,7 @@ describe('ReceivePurchaseOrderUseCase', () => {
       create: vi.fn(),
       findActiveByProductId: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const unitOfWork: UnitOfWork = {
@@ -105,6 +108,7 @@ describe('ReceivePurchaseOrderUseCase', () => {
       updateStatus: vi.fn(),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new ReceivePurchaseOrderUseCase(

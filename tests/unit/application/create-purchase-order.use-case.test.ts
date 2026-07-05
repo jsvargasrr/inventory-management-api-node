@@ -25,6 +25,7 @@ describe('CreatePurchaseOrderUseCase', () => {
       create: vi.fn(),
       findBySku: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
       updateStock: vi.fn(),
       existsBySku: vi.fn(),
     };
@@ -46,6 +47,7 @@ describe('CreatePurchaseOrderUseCase', () => {
       create: vi.fn(),
       findBySku: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
       updateStock: vi.fn(),
       existsBySku: vi.fn(),
     };
@@ -64,6 +66,7 @@ describe('CreatePurchaseOrderUseCase', () => {
       }),
       findById: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
       updateStatus: vi.fn(),
     };
 

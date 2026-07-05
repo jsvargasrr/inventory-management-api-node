@@ -22,6 +22,7 @@ describe('ApprovePurchaseOrderUseCase', () => {
       updateStatus: vi.fn().mockResolvedValue({ ...pendingOrder, status: 'APROBADA' }),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new ApprovePurchaseOrderUseCase(repo);
@@ -37,6 +38,7 @@ describe('ApprovePurchaseOrderUseCase', () => {
       updateStatus: vi.fn(),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new ApprovePurchaseOrderUseCase(repo);
@@ -50,6 +52,7 @@ describe('ApprovePurchaseOrderUseCase', () => {
       updateStatus: vi.fn(),
       create: vi.fn(),
       findAll: vi.fn(),
+      count: vi.fn(),
     };
 
     const useCase = new ApprovePurchaseOrderUseCase(repo);

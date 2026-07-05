@@ -7,6 +7,7 @@ import type {
 } from '../../../domain/product/product.repository.js';
 import { getDbClient } from './prisma-context.js';
 import type { PrismaProductRecord } from './prisma-types.js';
+import { buildProductFindArgs, buildProductWhere } from './query-builders.js';
 
 function mapProduct(record: PrismaProductRecord): Product {
   return {
@@ -46,35 +47,12 @@ export class PrismaProductRepository implements ProductRepository {
   }
 
   async findAll(filters?: ProductFilters): Promise<Product[]> {
-    const where: Record<string, unknown> = {};
-
-    if (filters?.category) {
-      where.category = filters.category;
-    }
-
-    if (filters?.supplier) {
-      where.supplier = { contains: filters.supplier };
-    }
-
-    if (filters?.minStock !== undefined || filters?.maxStock !== undefined) {
-      where.currentStock = {
-        ...(filters.minStock !== undefined ? { gte: filters.minStock } : {}),
-        ...(filters.maxStock !== undefined ? { lte: filters.maxStock } : {}),
-      };
-    }
-
-    if (filters?.hasActiveAlert) {
-      where.alerts = {
-        some: { status: 'ACTIVA' },
-      };
-    }
-
-    const products = await this.db().product.findMany({
-      where,
-      orderBy: { name: 'asc' },
-    });
-
+    const products = await this.db().product.findMany(buildProductFindArgs(filters));
     return products.map(mapProduct);
+  }
+
+  async count(filters?: ProductFilters): Promise<number> {
+    return this.db().product.count({ where: buildProductWhere(filters) });
   }
 
   async updateStock(id: string, newStock: number): Promise<Product> {

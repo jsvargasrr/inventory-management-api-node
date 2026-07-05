@@ -13,7 +13,7 @@ npm run verify:enunciado
 
 ## Resultados esperados
 
-- [ ] `npm test` → 53 tests passing
+- [ ] `npm test` → 60 tests passing
 - [ ] `npm run verify:enunciado` → 27/27 checks
 - [ ] `npm run lint` → sin errores
 - [ ] `GET /health` → `{ "status": "ok" }`

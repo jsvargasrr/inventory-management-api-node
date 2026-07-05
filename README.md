@@ -1,8 +1,8 @@
 # Inventory Management API — MercadoExpress
 
-API REST para gestión de inventario, alertas de stock bajo y órdenes de compra.
+![CI](https://github.com/jsvargasrr/inventory-management-api-node/actions/workflows/ci.yml/badge.svg)
 
-**Demo en vivo:** _Pendiente de deploy — ver sección [Deploy](#deploy-en-la-nube)_
+API REST para gestión de inventario, alertas de stock bajo y órdenes de compra.
 
 **Repositorio:** [github.com/jsvargasrr/inventory-management-api-node](https://github.com/jsvargasrr/inventory-management-api-node)
 
@@ -152,13 +152,19 @@ npm run dev
 curl http://localhost:3000/health
 ```
 
-### 2. Listar productos con alerta activa
+### 2. Listar categorías
+
+```bash
+curl http://localhost:3000/categories
+```
+
+### 3. Listar productos con alerta activa
 
 ```bash
 curl "http://localhost:3000/products?hasActiveAlert=true"
 ```
 
-### 3. Crear producto
+### 4. Crear producto
 
 ```bash
 curl -X POST http://localhost:3000/products \
@@ -174,7 +180,7 @@ curl -X POST http://localhost:3000/products \
   }'
 ```
 
-### 4. Ajustar stock (salida — provoca error si no hay suficiente)
+### 5. Ajustar stock (salida — provoca error si no hay suficiente)
 
 ```bash
 # Sustituir :id por UUID del producto
@@ -183,19 +189,25 @@ curl -X POST http://localhost:3000/products/{id}/adjustments \
   -d '{ "type": "SALIDA", "quantity": 10, "reason": "Venta mostrador" }'
 ```
 
-### 5. Ver historial de movimientos
+### 6. Paginación de productos
+
+```bash
+curl "http://localhost:3000/products?page=1&limit=3"
+```
+
+### 7. Ver historial de movimientos
 
 ```bash
 curl http://localhost:3000/products/{id}/movements
 ```
 
-### 6. Listar alertas activas
+### 8. Listar alertas activas
 
 ```bash
 curl "http://localhost:3000/alerts?status=ACTIVA"
 ```
 
-### 7. Crear orden desde alerta
+### 9. Crear orden desde alerta
 
 ```bash
 curl -X POST http://localhost:3000/purchase-orders \
@@ -203,7 +215,7 @@ curl -X POST http://localhost:3000/purchase-orders \
   -d '{ "alertId": "{alert-uuid}", "quantity": 50 }'
 ```
 
-### 8. Ciclo de vida de orden
+### 10. Ciclo de vida de orden
 
 ```bash
 curl -X PATCH http://localhost:3000/purchase-orders/{id}/approve
@@ -225,7 +237,7 @@ curl -X PATCH http://localhost:3000/purchase-orders/{id}/receive
 | `npm run build` | Compilar TypeScript |
 | `npm start` | Ejecutar build de producción |
 | `npm run start:prod` | Producción con migrate + seed |
-| `npm test` | 53 tests automatizados |
+| `npm test` | 57+ tests automatizados |
 | `npm run test:coverage` | Reporte de cobertura (~86%) |
 | `npm run verify:enunciado` | Checklist RF + 6 reglas (27 checks) |
 | `npm run db:deploy` | Aplicar migraciones |
@@ -241,13 +253,24 @@ curl -X PATCH http://localhost:3000/purchase-orders/{id}/receive
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| `GET` | `/categories` | Listar categorías disponibles |
 | `POST` | `/products` | Registrar producto |
-| `GET` | `/products` | Listar con filtros |
+| `GET` | `/products` | Listar con filtros (y paginación opcional) |
 | `GET` | `/products/:id` | Obtener producto |
 | `POST` | `/products/:id/adjustments` | Ajustar stock |
 | `GET` | `/products/:id/movements` | Historial inmutable |
 
 **Filtros:** `category`, `supplier`, `hasActiveAlert`, `minStock`, `maxStock`
+
+**Paginación opcional:** `page`, `limit` (máx 100). Sin estos params → respuesta en array (compatibilidad).
+
+```json
+// GET /products?page=1&limit=2
+{
+  "data": [ ... ],
+  "meta": { "page": 1, "limit": 2, "total": 6, "totalPages": 3 }
+}
+```
 
 ### Alertas
 
@@ -260,7 +283,7 @@ curl -X PATCH http://localhost:3000/purchase-orders/{id}/receive
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | `POST` | `/purchase-orders` | Crear (manual o desde alerta) |
-| `GET` | `/purchase-orders` | Listar |
+| `GET` | `/purchase-orders` | Listar (paginación opcional: `page`, `limit`) |
 | `GET` | `/purchase-orders/:id` | Obtener |
 | `PATCH` | `/purchase-orders/:id/approve` | PENDIENTE → APROBADA |
 | `PATCH` | `/purchase-orders/:id/reject` | PENDIENTE → RECHAZADA |
@@ -300,10 +323,32 @@ npm run verify:enunciado
 
 | Métrica | Valor |
 |---------|-------|
-| Tests | 53 |
+| Tests | 57+ |
 | Cobertura statements | ~86% |
 | Cobertura functions | ~92% |
 | Checklist enunciado | 27/27 ✅ |
+
+---
+
+## Documentación API (Swagger)
+
+```
+http://localhost:3000/docs
+```
+
+OpenAPI JSON: `/docs/json`
+
+---
+
+## Colección Postman
+
+Importar en Postman o Insomnia:
+
+```
+docs/postman/inventory-api.postman_collection.json
+```
+
+Variable `baseUrl`: `http://localhost:3000`. Incluye flujo completo con variables automáticas `productId`, `alertId`, `orderId`.
 
 ---
 
@@ -360,11 +405,14 @@ curl https://TU-URL.onrender.com/docs
 |------------|--------|
 | Repositorio GitHub público | ✅ |
 | README con arquitectura e instrucciones | ✅ |
-| Tests automatizados (53) | ✅ |
+| Tests automatizados (57+) | ✅ |
 | Cumplimiento RF-01 a RF-06 | ✅ |
 | 6 reglas de negocio | ✅ |
 | Seed con datos del enunciado | ✅ |
-| URL deployada en nube | ⏳ Pendiente |
+| GET /categories | ✅ |
+| Paginación opcional | ✅ |
+| Colección Postman | ✅ |
+| URL deployada en nube | — (no requerido localmente) |
 
 ---
 

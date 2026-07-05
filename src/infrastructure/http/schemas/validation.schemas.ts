@@ -13,7 +13,12 @@ export const createProductSchema = z.object({
   supplier: z.string().min(1),
 });
 
-export const productFiltersSchema = z.object({
+export const paginationSchema = z.object({
+  page: z.coerce.number().int().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+});
+
+export const productFiltersSchema = paginationSchema.extend({
   category: z.string().optional(),
   supplier: z.string().optional(),
   hasActiveAlert: z
@@ -49,7 +54,7 @@ export const alertFiltersSchema = z.object({
   productId: z.string().uuid().optional(),
 });
 
-export const purchaseOrderFiltersSchema = z.object({
+export const purchaseOrderFiltersSchema = paginationSchema.extend({
   status: z.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA', 'RECIBIDA']).optional(),
   productId: z.string().uuid().optional(),
 });

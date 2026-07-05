@@ -19,7 +19,9 @@ export interface CreatePurchaseOrderData {
   quantity: number;
 }
 
-export interface PurchaseOrderFilters {
+import type { PaginationParams } from '../../shared/types/pagination.js';
+
+export interface PurchaseOrderFilters extends PaginationParams {
   status?: PurchaseOrderStatus;
   productId?: string;
 }
@@ -28,6 +30,7 @@ export interface PurchaseOrderRepository {
   create(data: CreatePurchaseOrderData): Promise<PurchaseOrder>;
   findById(id: string): Promise<PurchaseOrder | null>;
   findAll(filters?: PurchaseOrderFilters): Promise<PurchaseOrder[]>;
+  count(filters?: PurchaseOrderFilters): Promise<number>;
   updateStatus(
     id: string,
     status: PurchaseOrderStatus,

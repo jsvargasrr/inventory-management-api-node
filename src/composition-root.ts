@@ -2,6 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 import { CreateProductUseCase } from './application/products/create-product.use-case.js';
 import { GetProductUseCase } from './application/products/get-product.use-case.js';
 import { ListProductsUseCase } from './application/products/list-products.use-case.js';
+import { ListCategoriesUseCase } from './application/products/list-categories.use-case.js';
 import { AdjustStockUseCase } from './application/inventory/adjust-stock.use-case.js';
 import { ListMovementsUseCase } from './application/inventory/list-movements.use-case.js';
 import { ListAlertsUseCase } from './application/alerts/list-alerts.use-case.js';
@@ -23,6 +24,7 @@ import { PrismaUnitOfWork } from './infrastructure/database/prisma/unit-of-work.
 export interface AppContainer {
   createProduct: CreateProductUseCase;
   listProducts: ListProductsUseCase;
+  listCategories: ListCategoriesUseCase;
   getProduct: GetProductUseCase;
   adjustStock: AdjustStockUseCase;
   listMovements: ListMovementsUseCase;
@@ -47,6 +49,7 @@ export function buildContainer(prismaClient?: PrismaClient): AppContainer {
   return {
     createProduct: new CreateProductUseCase(productRepository),
     listProducts: new ListProductsUseCase(productRepository),
+    listCategories: new ListCategoriesUseCase(),
     getProduct: new GetProductUseCase(productRepository),
     adjustStock: new AdjustStockUseCase(
       productRepository,

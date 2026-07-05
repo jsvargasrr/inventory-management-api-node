@@ -1,3 +1,5 @@
+import type { PaginationParams } from '../../shared/types/pagination.js';
+
 export const PRODUCT_CATEGORIES = [
   'Bebidas',
   'Lácteos',
@@ -32,7 +34,7 @@ export interface CreateProductData {
   supplier: string;
 }
 
-export interface ProductFilters {
+export interface ProductFilters extends PaginationParams {
   category?: string;
   supplier?: string;
   hasActiveAlert?: boolean;
@@ -45,6 +47,7 @@ export interface ProductRepository {
   findById(id: string): Promise<Product | null>;
   findBySku(sku: string): Promise<Product | null>;
   findAll(filters?: ProductFilters): Promise<Product[]>;
+  count(filters?: ProductFilters): Promise<number>;
   updateStock(id: string, newStock: number): Promise<Product>;
   existsBySku(sku: string): Promise<boolean>;
 }

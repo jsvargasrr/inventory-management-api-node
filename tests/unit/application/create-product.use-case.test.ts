@@ -19,6 +19,7 @@ function createRepository(overrides: Partial<ProductRepository> = {}): ProductRe
     findById: vi.fn(),
     findBySku: vi.fn(),
     findAll: vi.fn(),
+    count: vi.fn().mockResolvedValue(0),
     updateStock: vi.fn(),
     existsBySku: vi.fn().mockResolvedValue(false),
     ...overrides,

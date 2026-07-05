@@ -14,6 +14,8 @@ export async function registerProductRoutes(
   app: FastifyInstance,
   container: AppContainer,
 ): Promise<void> {
+  app.get('/categories', async () => container.listCategories.execute());
+
   app.post('/products', async (request, reply) => {
     const body = createProductSchema.parse(request.body);
     const product = await container.createProduct.execute(body);

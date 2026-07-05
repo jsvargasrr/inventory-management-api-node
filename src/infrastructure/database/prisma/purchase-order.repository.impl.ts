@@ -8,6 +8,7 @@ import type {
 } from '../../../domain/purchase-order/order-state.machine.js';
 import { getDbClient } from './prisma-context.js';
 import type { PrismaOrderRecord } from './prisma-types.js';
+import { buildOrderFindArgs, buildOrderWhere } from './query-builders.js';
 
 function mapOrder(record: PrismaOrderRecord): PurchaseOrder {
   return {
@@ -48,22 +49,12 @@ export class PrismaPurchaseOrderRepository implements PurchaseOrderRepository {
   }
 
   async findAll(filters?: PurchaseOrderFilters): Promise<PurchaseOrder[]> {
-    const where: Record<string, unknown> = {};
-
-    if (filters?.status) {
-      where.status = filters.status;
-    }
-
-    if (filters?.productId) {
-      where.productId = filters.productId;
-    }
-
-    const orders = await this.db().purchaseOrder.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-    });
-
+    const orders = await this.db().purchaseOrder.findMany(buildOrderFindArgs(filters));
     return orders.map(mapOrder);
+  }
+
+  async count(filters?: PurchaseOrderFilters): Promise<number> {
+    return this.db().purchaseOrder.count({ where: buildOrderWhere(filters) });
   }
 
   async updateStatus(

@@ -31,6 +31,7 @@ function createMocks(stock = 50) {
       ...product,
       currentStock: newStock,
     })),
+    count: vi.fn(),
     existsBySku: vi.fn(),
   };
 
